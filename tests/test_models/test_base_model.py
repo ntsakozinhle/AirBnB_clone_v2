@@ -7,6 +7,29 @@ from uuid import UUID
 import json
 import os
 
+class TestConsole(unittest.TestCase):
+    """Tests for the HBNBCommand class"""
+    def setUp(self):
+        """ """
+        self.console = HBNBCommand()
+
+    def tearDown(self):
+        try:
+            os.remove('file.json')
+        except:
+            pass
+
+    def test_create_state(self):
+        self.console.onecmd('create State name="California"')
+        output = self.console.onecmd('all State')
+        self.assertIn('California', output)
+        # Assuming the output is stored in a variable or printed
+
+    def test_create_place(self):
+        self.console.onecmd('create Place city_id="0001" user_id="0001" name="My_little_house" number_rooms=4 number_bathrooms=2 max_guest=10 price_by_night=300 latitude=37.773972 longitude=-122.431297')
+        self.console.onecmd('all Place')
+        self.assertIn('My_little_house', output)
+        # Check that the output includes a place object
 
 class test_basemodel(unittest.TestCase):
     """ """
@@ -16,26 +39,6 @@ class test_basemodel(unittest.TestCase):
         super().__init__(*args, **kwargs)
         self.name = 'BaseModel'
         self.value = BaseModel
-
-    def setUp(self):
-        """ """
-        self.console = HBNBCommand()
-
-    def test_create_state(self):
-        self.console.onecmd('create State name="California"')
-        self.console.onecmd('all State')
-        # Assuming the output is stored in a variable or printed
-
-    def test_create_place(self):
-        self.console.onecmd('create Place city_id="0001" user_id="0001" name="My_little_house" number_rooms=4 number_bathrooms')
-        self.console.onecmd('all Place')
-        # Check that the output includes a place object
-
-    def tearDown(self):
-        try:
-            os.remove('file.json')
-        except:
-            pass
 
     def test_default(self):
         """ """
@@ -107,6 +110,13 @@ class test_basemodel(unittest.TestCase):
         n = new.to_dict()
         new = BaseModel(**n)
         self.assertFalse(new.created_at == new.updated_at)
+
+    def test_base_model_creation(self):
+        """Test creating a BaseModel object with parameters"""
+        model = BaseModel(id="123", created_at="2022-01-01T00:00:00", updated_at="2022-01-01T00:00:00")
+        self.assertEqual(model.id, "123")
+        self.assertEqual(model.created_at, datetime.datetime(2022, 1, 1, 0, 0))
+        self.assertEqual(model.updated_at, datetime.datetime(2022, 1, 1, 0, 0))
 
 
 if __name__ == '__main__':
