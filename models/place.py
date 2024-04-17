@@ -21,3 +21,17 @@ class Place(BaseModel, Base):
     
     user = relationship("User", back_populates="places")
     city = relationship("City", back_populates="places")
+
+    if getenv('HBNB_TYPE_STORAGE') == 'db':
+        reviews = relationship("Review", backref="place", cascade="all, delete")
+
+
+    @property
+    def reviews(self):
+        from models import storage
+        review_list = []
+        all_reviews = storage.all(Review)
+        for review in all_reviews.values():
+            if review.place_id == self.id:
+                review_list.append(review)
+        return review_list

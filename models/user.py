@@ -8,4 +8,4 @@ from sqlalchemy.orm import relationship
 class User(BaseModel, Base):
     """This class defines a user by various attributes"""
     __tablename__ = 'users'
-    places = relationship("Place", cascade="all, delete", backref="user", passive_deletes=True)
+    places = relationship("Review", cascade="all, delete", backref="user", passive_deletes=True)
