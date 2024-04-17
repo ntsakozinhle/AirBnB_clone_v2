@@ -23,7 +23,11 @@ class Place(BaseModel, Base):
     city = relationship("City", back_populates="places")
 
     if getenv('HBNB_TYPE_STORAGE') == 'db':
-        reviews = relationship("Review", backref="place", cascade="all, delete")
+        place_amaenity = Table(
+                'place_amenity', Base.emtadata,
+                Column('place_id', String(60), ForeignKey('places.id'), primary_key=True, nullable=False)
+                Column('amenity_id', String(60), ForeignKey('amenity.id'), primary_key=True, nullable=False)
+        amenities = relationship("Amenity", secondary=place_amenity, viewonly=False)
 
 
     @property
