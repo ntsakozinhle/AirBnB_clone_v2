@@ -19,7 +19,17 @@ class test_basemodel(unittest.TestCase):
 
     def setUp(self):
         """ """
-        pass
+        self.console = HBNBCommand()
+
+    def test_create_state(self):
+        self.console.onecmd('create State name="California"')
+        self.console.onecmd('all State')
+        # Assuming the output is stored in a variable or printed
+
+    def test_create_place(self):
+        self.console.onecmd('create Place city_id="0001" user_id="0001" name="My_little_house" number_rooms=4 number_bathrooms')
+        self.console.onecmd('all Place')
+        # Check that the output includes a place object
 
     def tearDown(self):
         try:
@@ -97,3 +107,7 @@ class test_basemodel(unittest.TestCase):
         n = new.to_dict()
         new = BaseModel(**n)
         self.assertFalse(new.created_at == new.updated_at)
+
+
+if __name__ == '__main__':
+    unittest.main()

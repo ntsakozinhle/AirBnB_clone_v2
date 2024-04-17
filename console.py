@@ -114,17 +114,58 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     def do_create(self, args):
-        """ Create an object of any class"""
+        """ Create an object of any class with given parameters"""
         if not args:
             print("** class name missing **")
             return
-        elif args not in HBNBCommand.classes:
+
+        # Split the arguments into class name and parameters
+        args_list = args.split()
+        class_name = args_list[0]
+
+        if class_name not in self.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[args]()
-        storage.save()
-        print(new_instance.id)
-        storage.save()
+
+        # Parse the parameters
+        params = {}
+        for arg in args_list[1:]:
+            if '=' in arg:
+                key, value = arg.split('=')
+                # Handle string values with escaped quotes and underscores
+                if value.startswith('"') and value.endswith('"'):
+                    value = value[1:-1].replace('_', ' ').replace('\\"', '"')
+                    params[key] = value
+                # Handle float and integer values
+                elif '.' in value:
+                    try:
+                        params[key] = float(value)
+                    except ValueError:
+                        print(f"Error: Invalid value for parameter {key}")
+                else:
+                    try:
+                        params[key] = int(value)
+                    except ValueError:
+                        print(f"Error: Invalid value for parameter {key}")
+            else:
+                print(f"Error: Invalid parameter syntax '{arg}'")
+
+        # Create the object with the parsed parameters
+        if class_name == 'State':
+            new_instance = State(**params)
+        elif class_name == 'Place':
+            new_instance = Place(**params)
+
+        # Add other classes here
+        else:
+            new_instance = BaseModel(**params)
+
+        # Create the object with the parsed parameters
+        new_instance.save()
+        if hasattr(new_instance, 'id'):
+            print(new_instance.id)
+        else:
+            print("Object created successfully")
 
     def help_create(self):
         """ Help information for the create method """
